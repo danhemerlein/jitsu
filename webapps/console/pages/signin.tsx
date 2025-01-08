@@ -9,7 +9,7 @@ import React, { useState } from "react";
 import { feedbackError } from "../lib/ui";
 import { useRouter } from "next/router";
 import { branding } from "../lib/branding";
-import { credentialsLoginEnabled, githubLoginEnabled, oidcLoginConfig } from "../lib/nextauth.config";
+import { credentialsLoginEnabled, githubLoginEnabled, oidcLoginEnabled } from "../lib/nextauth.config";
 import { useQuery } from "@tanstack/react-query";
 
 function JitsuLogo() {
@@ -130,12 +130,12 @@ const NextAuthSignInPage = ({ csrfToken, providers: { github, oidc, credentials 
     return (
       <div className="w-screen h-screen flex flex-col items-center justify-center">
         <AlertTriangle className="w-32 h-32 text-error" />
-        <div className="mt-3 text-textLight text-center">
+        <p className="mt-3 text-textLight text-center">
           This page should not be used if Firebase authorization is enabled. Please proceed to a{" "}
           <Link href="/" className="underline text-primary">
             main page of the app
           </Link>
-        </div>
+        </p>
       </div>
     );
   }
@@ -144,7 +144,7 @@ const NextAuthSignInPage = ({ csrfToken, providers: { github, oidc, credentials 
       <div className="space-y-2 flex justify-center h-16">
         <JitsuLogo />
       </div>
-      <div className={"flex flex-col gap-1.5"}>
+      <div className="flex flex-col gap-1.5">
         {credentials.enabled && <CredentialsForm />}
         {credentials.enabled && (github.enabled || oidc.enabled) && <hr className="my-4" />}
         {github.enabled && <GitHubSignIn />}
@@ -170,7 +170,7 @@ export async function getServerSideProps() {
   if (process.env.FIREBASE_AUTH) {
     throw new Error(`Firebase auth is enabled. This page should not be used.`);
   }
-  if (!githubLoginEnabled && !credentialsLoginEnabled && !oidcLoginConfig) {
+  if (!githubLoginEnabled && !credentialsLoginEnabled && !oidcLoginEnabled) {
     throw new Error(`No auth providers are enabled found. Available providers: github, credentials, OIDC`);
   }
   return {
@@ -184,7 +184,7 @@ export async function getServerSideProps() {
           enabled: githubLoginEnabled,
         },
         oidc: {
-          enabled: !!oidcLoginConfig,
+          enabled: oidcLoginEnabled,
         },
       },
       publicPage: true,

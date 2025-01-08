@@ -151,27 +151,27 @@ const NextAuthSignInPage = ({ csrfToken, providers: { github, oidc, credentials 
         {oidc.enabled && <OIDCSignIn />}
       </div>
       {router.query.error && (
-        <div className="text-error">
+        <p className="text-error">
           Something went wrong. Please try again. Error code: <code>{router.query.error}</code>
-        </div>
+        </p>
       )}
       {!app.disableSignup && (github.enabled || oidc.enabled) && (
-        <div className="text-center text-textLight text-xs">
+        <p className="text-center text-textLight text-xs">
           Automatic signup is enabled for this instance. Sign in with github and if you don't have an account, a new
           account will be created automatically. This account won't have any access to pre-existing project unless the
           access is explicitly granted
-        </div>
+        </p>
       )}
     </div>
   );
 };
 
-export async function getServerSideProps(context) {
+export async function getServerSideProps() {
   if (process.env.FIREBASE_AUTH) {
     throw new Error(`Firebase auth is enabled. This page should not be used.`);
   }
   if (!githubLoginEnabled && !credentialsLoginEnabled && !oidcLoginConfig) {
-    throw new Error(`No auth providers are enabled found. Available providers: github, credentials`);
+    throw new Error(`No auth providers are enabled found. Available providers: github, credentials, OIDC`);
   }
   return {
     props: {

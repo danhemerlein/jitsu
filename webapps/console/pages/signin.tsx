@@ -21,7 +21,7 @@ function JitsuLogo() {
   );
 }
 
-function CredentialsForm({}) {
+function CredentialsForm() {
   const lastUsedLogin = localStorage.getItem("last-used-login-email") || undefined;
   const { data, isLoading, error } = useQuery(["next-auth-csrfToken"], async () => {
     return {
